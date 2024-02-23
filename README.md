@@ -1,11 +1,11 @@
-FEM Coding Assignment: LST, Q4, Q9 Shape Functions
-==================================================
+FEM Coding Assignment: Quadrature Points and the Isoparametric Element Jacobian
+===============================================================================
 
-This assignment is similar to assignment 2: the objetive is to implement shape functions for 
-linear strain triangle (LST), bilinear quadrilateral (Q4), and Larange quadrilateral (Q9) elements.
+This assignment extends the Q4, Q9, CST, and LST elements that you implemented in PS03 to
+include quadrature weights and points, as well as to add the calculation of the Jacobian.
 
-Initial setup
--------------
+Initial setup (same as before)
+------------------------------
 
 1. Check out the problem repository
     
@@ -23,38 +23,54 @@ Initial setup
 
          make
 
-5. Compile the code again (using `make`) and run with `./bin/main`.
-   The output should indicate that the DiracTest, SumToUnityTest, and EtaDerivativeTest passes for
-   CST (which you implemented before), and that it fails for LST, Q4, and Q9.
+   You should see a number of warnings indicating "no return statement".
+   These should disappear once you have implemented the assignment.
 
-Implementation
---------------
+Part 1: Adding quadrature points and weights
+--------------------------------------------
 
 You will find two TODOs in each of the following files:
 
 - `src/Element/LST.H`
+- `src/Element/CST.H`
 - `src/Element/Q4.H`
 - `src/Element/Q9.H`
 
-For each of these, you must compute the shape functions (eta) and their derivatives (deta), just as you 
-did for the CST element.
-Note that the shape functions are all given to you in the notes; you only need to implement them and
-compute their derivatives.
+To address the todo items:
+1. For the `eta` and `deta` functions, simply copy/paste your implementations from PS03.
+2. For the `getArea` function, you can simply return a value (like `return 1.0;` if the area of
+   the template element is 1.0).
+3. For `Qp`, add vectors corresponding to the quadrature points. (This should be a comma-separated list of
+   `Eigen::Vector2d`s, like for `Y0`.
+4. For `Qw`, add a comma-separated list of weights corresponding to the quadrature points.
+
+Part 2: Implement the Jacobian matrix calculation
+-------------------------------------------------
+
+You will find a TODO in the following file:
+
+- `src/Element/Element.H`
+
+(Note that this is an **abstract parent element**, meaning that everything you imlement here is
+automatically inherited by all of the other elements.)
+
+Follow the instructions to implement the Jacobian matrix.
+
 
 Check result
 ------------
 
-You will know that the implementation is successful if all of the tests pass. 
-For your reference:
+You will find a TODO in the following file:
 
-- The "Weak Dirac" test checks that each shape function returns 1 for its associated node and zero
-  for all other nodes. The error message will tell you which shape function / node is problematic.
+- `src/main.cpp`
 
-- The "SumToUnity" test checks that all the shape functions sum to one for points sampled randomly
-  inside the element.
+Follow the instructions in this file to create a CST element with embedded coordinates
+(recommended that you use the coordinates in the CST example in the notes.)
+When you have completed the example, running `./bin/main` will run the tests, followed by
+the output from your test.
 
-- The "EtaDerivative" checks the exact derivative (deta) against a numerically calculated derivative
-  to ensure consistency.
+Play around with the inputs `X0` to ensure that this implmentation makes sense.
+Provide a brief discussion in your submission.
 
 
 
